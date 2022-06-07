@@ -1,2 +1,2 @@
 # Leetcode
-This repositoy purposed for the leetcode problems
+This repository is purposed for the leetcode problems
