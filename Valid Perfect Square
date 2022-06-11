@@ -1,0 +1,25 @@
+public class Solution {
+    public bool IsPerfectSquare(int num) {
+        if (num == 1)
+            return true;
+
+        var result = 0M;
+        decimal xn = 2;
+        while (true)
+        {
+            var possibleResult = 0.5M * (xn + (num / xn));
+
+            if (xn == possibleResult)
+            {
+                result = xn;
+                break;
+            }
+
+            xn = possibleResult;
+        }
+
+        return (result % 1) == 0;
+    }
+}
+
+// Given a positive integer num, write a function which returns True if num is a perfect square else False.
