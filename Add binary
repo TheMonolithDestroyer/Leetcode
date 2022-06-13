@@ -1,81 +1,88 @@
-public static string AddBinary(string a, string b)
-{
-    var aUpperBound = a.Length - 1;
-    var bUpperBound = b.Length - 1;
-    var div = Math.Abs(aUpperBound - bUpperBound);
+// Given two binary strings a and b, return their sum as a binary string.
 
-    var newA = "";
-    var newB = "";
-    if (aUpperBound > bUpperBound)
-    {
-        for (int i = 0; i < div; i++)
-        {
-            newB += '0';
-        }
-    }
-    else if (bUpperBound > aUpperBound)
-    {
-        for (int i = 0; i < div; i++)
-        {
-            newA += '0';
-        }
-    }
-    newB += b;
-    newA += a;
+public class Solution {
+    public string AddBinary(string a, string b) {
+        int iL = a.Length - 1;
+        int jL = b.Length - 1;
 
-    aUpperBound = newA.Length - 1;
-    bUpperBound = newB.Length - 1;
-
-    var holder = 0;
-    string result = "";
-    while(aUpperBound >= 0)
-    {
-        var i = newA[aUpperBound];
-        var j = newB[bUpperBound];
-        if (i == '0' && j == '0')
+        int reminder = 0;
+        Stack myStack = new();
+        while (iL >= 0 || jL >= 0)
         {
-            if (holder > 0)
+            char? i = iL < 0 ? null : a[iL];
+            char? j = jL < 0 ? null : b[jL];
+
+            switch (i, j)
             {
-                result += '1';
-                holder--;
+                case (null, '1'):
+                case ('1', null):
+                    {
+                        myStack.Push(reminder > 0 ? '0' : '1');
+                    }
+                    break;
+                case (null, '0'):
+                case ('0', null):
+                    {
+                        if (reminder > 0)
+                        {
+                            myStack.Push('1');
+                            reminder -= 1;
+                        }
+                        else
+                        {
+                            myStack.Push('0');
+                        }
+                    }
+                    break;
+                case ('0', '0'):
+                    {
+                        if (reminder > 0)
+                        {
+                            myStack.Push('1');
+                            reminder -= 1;
+                        }
+                        else
+                        {
+                            myStack.Push('0');
+                        }
+                    }
+                    break;
+                case ('1', '0'):
+                case ('0', '1'):
+                    {
+                        myStack.Push(reminder > 0 ? '0' : '1');
+                    }
+                    break;
+                case ('1', '1'):
+                    {
+                        if (reminder > 0)
+                        {
+                            myStack.Push('1');
+                        }
+                        else
+                        {
+                            myStack.Push('0');
+                            reminder += 1;
+                        }
+                    }
+                    break;
             }
-            else
-            {
-                result += '0';
-            }
+
+            iL--;
+            jL--;
         }
-        else if ((j == '1' && i == '0') || (j == '0' && i == '1'))
+
+        if (reminder > 0)
         {
-            result += holder > 0 ? '0' : '1';
+            myStack.Push('1');
         }
-        else if (j == '1' && i == '1')
+
+        StringBuilder sb = new(); 
+        while(myStack.Count > 0)
         {
-            if (holder > 0)
-            {
-                result += '1';
-            }
-            else
-            {
-                result += '0';
-                holder++;
-            }
+            sb.Append(myStack.Pop());
         }
 
-        aUpperBound--;
-        bUpperBound--;
+        return sb.ToString();
     }
-
-    if (holder > 0)
-    {
-        result += '1';
-    }
-
-    return Reverse(result);
-}
-
-public static string Reverse(string s)
-{
-    char[] charArray = s.ToCharArray();
-    Array.Reverse(charArray);
-    return new string(charArray);
 }
